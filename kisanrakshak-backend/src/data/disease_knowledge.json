@@ -1,0 +1,879 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "sources": [
+      "PlantVillage Dataset (spMohanty/PlantVillage-Dataset) - 54,306 images, 14 crops, 26 diseases",
+      "SAGE Dataset (tirtho149/SAGE) - 839K images, 335 crops, 1,251 disease classes",
+      "CDDMBench (UnicomAI/UnicomBenchmark) - Crop Disease Diagnosis Multimodal Benchmark",
+      "Roboflow Multi-crop Disease Detection Dataset",
+      "ICAR (Indian Council of Agricultural Research) guidelines for Indian crop diseases"
+    ],
+    "indian_crops_priority": true,
+    "last_updated": "2026-09-13"
+  },
+  "crops": {
+    "rice": {
+      "local_names": ["paddy", "dhan", "chawal"],
+      "importance": "Primary staple crop of India — highest priority",
+      "datasets_covered": ["SAGE", "CDDMBench", "Roboflow"],
+      "diseases": [
+        {
+          "name": "Rice Blast",
+          "pathogen": "Magnaporthe oryzae",
+          "aliases": ["Blast", "Pyricularia blast", "neck blast", "leaf blast"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Diamond-shaped or eye-shaped lesions on leaves with gray/white center",
+            "Brown to reddish-brown border around lesions",
+            "Lesions on neck of panicle causing 'neck rot'",
+            "White or gray cottony growth in humid conditions",
+            "Affected panicle turns whitish-gray (called 'dead heart')"
+          ],
+          "favorable_conditions": "Cool nights (20-25°C), warm days, high humidity, heavy dew",
+          "growth_stages_affected": ["Tillering", "Booting", "Heading", "Grain filling"],
+          "treatments": [
+            "Spray Tricyclazole 75% WP @ 0.6 g/liter water",
+            "Spray Carbendazim 50% WP @ 1 g/liter water",
+            "Isoprothiolane 40% EC @ 1.5 ml/liter",
+            "Remove infected plants and burn",
+            "Avoid excess nitrogen fertilizer"
+          ],
+          "prevention": [
+            "Use resistant varieties (IR64, Pusa Basmati 1)",
+            "Seed treatment with Carbendazim @ 2g/kg seed",
+            "Balanced fertilization — avoid excess N",
+            "Drain fields periodically",
+            "Destroy crop stubble after harvest"
+          ],
+          "icar_recommendation": true
+        },
+        {
+          "name": "Brown Plant Hopper",
+          "pathogen": "Nilaparvata lugens (insect pest)",
+          "aliases": ["BPH", "hopperburn"],
+          "severity_potential": "Very High",
+          "symptoms": [
+            "Circular patches of yellowing and drying of plants (hopperburn)",
+            "Plants dry up suddenly like scorching",
+            "Insects found at base of plant near waterline",
+            "Honeydew secretion causing sooty mold"
+          ],
+          "treatments": [
+            "Spray Imidacloprid 17.8 SL @ 0.25 ml/liter",
+            "Buprofezin 25% SC @ 1 ml/liter",
+            "Avoid overuse of pyrethroid insecticides",
+            "Drain field for 2-3 days"
+          ],
+          "prevention": [
+            "Avoid excessive nitrogen",
+            "Wider spacing between plants",
+            "Use resistant varieties",
+            "Light traps at 1/ha"
+          ]
+        },
+        {
+          "name": "Bacterial Leaf Blight",
+          "pathogen": "Xanthomonas oryzae pv. oryzae",
+          "aliases": ["BLB", "kresek", "leaf blight"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Water-soaked lesions on leaf margins turning yellowish",
+            "Lesions expand and turn white or straw-colored",
+            "Leaf edges wilt and dry",
+            "In severe cases entire leaves dry up",
+            "Yellow sticky droplets (bacterial ooze) on lesions in morning"
+          ],
+          "treatments": [
+            "Spray Copper oxychloride 50% WP @ 3g/liter",
+            "Streptomycin sulphate + Tetracycline @ 0.5g/liter",
+            "Remove and burn severely infected plants"
+          ],
+          "prevention": [
+            "Use resistant varieties (IR20, Ratna)",
+            "Seed treatment with Streptomycin @ 0.5g/kg",
+            "Avoid flood irrigation",
+            "Balance fertilizer use"
+          ]
+        },
+        {
+          "name": "Sheath Blight",
+          "pathogen": "Rhizoctonia solani",
+          "aliases": ["sheath rot", "banded sheath blight"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Oval or irregular lesions on sheath near waterline",
+            "Lesions have whitish center with brown border",
+            "Lesions coalesce and extend upward to upper sheaths and leaves",
+            "White cottony mycelium seen under humid conditions"
+          ],
+          "treatments": [
+            "Spray Hexaconazole 5% EC @ 2 ml/liter",
+            "Validamycin 3% SL @ 2 ml/liter",
+            "Propiconazole 25% EC @ 1 ml/liter"
+          ],
+          "prevention": [
+            "Wider spacing (20×15 cm)",
+            "Avoid excess nitrogen",
+            "Drain fields occasionally"
+          ]
+        },
+        {
+          "name": "Healthy",
+          "aliases": ["normal", "no disease"],
+          "symptoms": ["Green leaves with no lesions", "Normal plant height and color"]
+        }
+      ]
+    },
+    "wheat": {
+      "local_names": ["gehu", "gehun"],
+      "importance": "Second most important staple crop in India",
+      "datasets_covered": ["PlantVillage", "SAGE", "CDDMBench"],
+      "diseases": [
+        {
+          "name": "Wheat Yellow Rust",
+          "pathogen": "Puccinia striiformis f. sp. tritici",
+          "aliases": ["Stripe rust", "yellow stripe rust"],
+          "severity_potential": "Very High",
+          "symptoms": [
+            "Yellow-orange pustules arranged in stripes along leaf veins",
+            "Pustules turn dark brown later in season",
+            "Leaves turn yellow and die prematurely",
+            "White cottony growth visible in early stages"
+          ],
+          "treatments": [
+            "Spray Propiconazole 25% EC @ 1 ml/liter (Tilt)",
+            "Tebuconazole 25.9% EC @ 1 ml/liter",
+            "Mancozeb 75% WP @ 2.5 g/liter"
+          ],
+          "prevention": [
+            "Use resistant varieties (HD2967, PBW343)",
+            "Early sowing before peak rust season",
+            "Balanced NPK fertilization"
+          ],
+          "icar_recommendation": true
+        },
+        {
+          "name": "Wheat Brown Rust",
+          "pathogen": "Puccinia triticina",
+          "aliases": ["Leaf rust", "orange rust"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Small round to oval orange-red pustules scattered randomly on leaves",
+            "Pustules do not form stripes (unlike yellow rust)",
+            "Leaves turn yellow around pustules",
+            "Black teliospores visible in late season"
+          ],
+          "treatments": [
+            "Spray Mancozeb 75% WP @ 2.5 g/liter",
+            "Propiconazole 25% EC @ 1 ml/liter",
+            "Hexaconazole 5% EC @ 1 ml/liter"
+          ],
+          "prevention": [
+            "Resistant varieties (K307, NW1014)",
+            "Avoid late sowing"
+          ]
+        },
+        {
+          "name": "Wheat Powdery Mildew",
+          "pathogen": "Blumeria graminis f. sp. tritici",
+          "aliases": ["Powdery mildew"],
+          "severity_potential": "Medium",
+          "symptoms": [
+            "White powdery patches on upper leaf surface",
+            "Patches enlarge and turn gray-brown",
+            "Affected leaves turn yellow and die",
+            "Powdery coating on stems and spikes in severe cases"
+          ],
+          "treatments": [
+            "Spray Karathane (Dinocap) 48% EC @ 1 ml/liter",
+            "Propiconazole 25% EC @ 1 ml/liter",
+            "Sulphur WP 80% @ 3 g/liter"
+          ],
+          "prevention": [
+            "Resistant varieties",
+            "Avoid excess nitrogen"
+          ]
+        },
+        {
+          "name": "Healthy",
+          "aliases": ["normal"],
+          "symptoms": ["Green leaves with no disease signs", "Erect healthy plants"]
+        }
+      ]
+    },
+    "tomato": {
+      "local_names": ["tamatar"],
+      "importance": "Most important vegetable crop in India",
+      "datasets_covered": ["PlantVillage", "SAGE", "CDDMBench", "Roboflow"],
+      "diseases": [
+        {
+          "name": "Tomato Early Blight",
+          "pathogen": "Alternaria solani",
+          "aliases": ["Early blight", "Alternaria blight", "target spot"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Dark brown to black spots with concentric rings (target-board pattern)",
+            "Yellow halo around spots",
+            "Lower and older leaves affected first",
+            "Spots enlarge and coalesce causing leaf death",
+            "Stem lesions at soil level (collar rot)"
+          ],
+          "treatments": [
+            "Spray Mancozeb 75% WP @ 2.5 g/liter",
+            "Chlorothalonil 75% WP @ 2 g/liter",
+            "Iprodione 50% WP @ 2 g/liter",
+            "Remove and destroy infected leaves"
+          ],
+          "prevention": [
+            "Crop rotation (avoid Solanaceae crops)",
+            "Drip irrigation to avoid wetting foliage",
+            "Staking plants for air circulation",
+            "Mulching to prevent soil splash"
+          ],
+          "icar_recommendation": true
+        },
+        {
+          "name": "Tomato Late Blight",
+          "pathogen": "Phytophthora infestans",
+          "aliases": ["Late blight", "Phytophthora blight"],
+          "severity_potential": "Very High",
+          "symptoms": [
+            "Water-soaked oily spots on leaves",
+            "White mold on undersurface of leaves in humid conditions",
+            "Spots turn brown and papery",
+            "Brown to dark brown rotting of stems",
+            "Greenish-brown firm rot on fruits"
+          ],
+          "treatments": [
+            "Spray Metalaxyl + Mancozeb @ 2.5 g/liter (Ridomil)",
+            "Cymoxanil + Mancozeb @ 3 g/liter",
+            "Fosetyl-Al 80% WP @ 3 g/liter",
+            "Remove affected plants immediately"
+          ],
+          "prevention": [
+            "Avoid overhead irrigation",
+            "Fungicide spray at first sign of disease",
+            "Destroy infected crop debris"
+          ]
+        },
+        {
+          "name": "Tomato Leaf Curl Virus",
+          "pathogen": "Tomato Leaf Curl Virus (ToLCV) — transmitted by whitefly",
+          "aliases": ["Leaf curl", "TLCV", "viral disease"],
+          "severity_potential": "Very High",
+          "symptoms": [
+            "Upward or downward curling of leaves",
+            "Leaves become leathery and thick",
+            "Plants become stunted and bushy",
+            "Yellowing of leaf margins",
+            "Severe reduction in fruit set"
+          ],
+          "treatments": [
+            "Control whitefly vector with Imidacloprid 17.8 SL @ 0.3 ml/liter",
+            "Yellow sticky traps @ 12/acre",
+            "No chemical cure for virus — remove infected plants"
+          ],
+          "prevention": [
+            "Use resistant varieties (Arka Rakshak, Naveen)",
+            "Nylon net nursery to prevent whitefly",
+            "Remove crop debris"
+          ]
+        },
+        {
+          "name": "Tomato Septoria Leaf Spot",
+          "pathogen": "Septoria lycopersici",
+          "aliases": ["Septoria blight"],
+          "severity_potential": "Medium",
+          "symptoms": [
+            "Small circular spots with dark brown border and gray center",
+            "Tiny black dots (pycnidia) visible in center of spots",
+            "Lower leaves affected first",
+            "Severe defoliation in wet conditions"
+          ],
+          "treatments": [
+            "Spray Mancozeb 75% WP @ 2.5 g/liter",
+            "Chlorothalonil 75% WP @ 2 g/liter"
+          ],
+          "prevention": ["Crop rotation", "Avoid wetting foliage"]
+        },
+        {
+          "name": "Tomato Yellow Leaf Curl Virus",
+          "pathogen": "TYLCV (Begomovirus) — whitefly transmitted",
+          "aliases": ["TYLCV", "yellow curl"],
+          "severity_potential": "Very High",
+          "symptoms": [
+            "Yellowing and upward curling of young leaves",
+            "Leaf margins curl upward and inward",
+            "Stunted plant growth",
+            "Flower drop and poor fruit setting"
+          ],
+          "treatments": [
+            "Imidacloprid 17.8 SL @ 0.3 ml/liter for whitefly control",
+            "Remove and burn infected plants"
+          ],
+          "prevention": ["Resistant varieties", "Reflective mulch to repel whitefly"]
+        },
+        {
+          "name": "Healthy",
+          "aliases": ["normal"],
+          "symptoms": ["Dark green leaves", "No lesions or discoloration", "Normal plant growth"]
+        }
+      ]
+    },
+    "potato": {
+      "local_names": ["aloo"],
+      "importance": "Major vegetable crop, especially in UP, Bihar, West Bengal",
+      "datasets_covered": ["PlantVillage", "SAGE", "CDDMBench"],
+      "diseases": [
+        {
+          "name": "Potato Late Blight",
+          "pathogen": "Phytophthora infestans",
+          "aliases": ["Late blight", "Phytophthora"],
+          "severity_potential": "Very High",
+          "symptoms": [
+            "Water-soaked dark green to brown lesions on leaves",
+            "White fluffy spore masses on leaf undersides in humid weather",
+            "Lesions spread rapidly and kill the entire plant",
+            "Brown rot inside potato tubers",
+            "Foul smell from infected tubers"
+          ],
+          "treatments": [
+            "Spray Metalaxyl + Mancozeb @ 2.5 g/liter",
+            "Cymoxanil + Mancozeb @ 3 g/liter",
+            "Dimethomorph 50% WP @ 1.5 g/liter",
+            "Preventive spray every 7-10 days in cool humid weather"
+          ],
+          "prevention": [
+            "Use certified disease-free seed tubers",
+            "Hilling to protect tubers",
+            "Avoid overhead irrigation"
+          ],
+          "icar_recommendation": true
+        },
+        {
+          "name": "Potato Early Blight",
+          "pathogen": "Alternaria solani",
+          "aliases": ["Early blight", "Alternaria"],
+          "severity_potential": "Medium",
+          "symptoms": [
+            "Dark brown spots with concentric rings on older leaves",
+            "Yellow halo around spots",
+            "Premature defoliation"
+          ],
+          "treatments": [
+            "Mancozeb 75% WP @ 2.5 g/liter",
+            "Chlorothalonil 75% WP @ 2 g/liter"
+          ],
+          "prevention": ["Crop rotation", "Balanced fertilization"]
+        },
+        {
+          "name": "Healthy",
+          "aliases": ["normal"],
+          "symptoms": ["Green leaves", "Vigorous growth", "No lesions"]
+        }
+      ]
+    },
+    "cotton": {
+      "local_names": ["kapas", "narma"],
+      "importance": "Major cash crop — India is world's largest producer",
+      "datasets_covered": ["SAGE", "CDDMBench", "Roboflow"],
+      "diseases": [
+        {
+          "name": "Cotton Leaf Curl Disease",
+          "pathogen": "Cotton Leaf Curl Virus (CLCuV) — whitefly transmitted",
+          "aliases": ["Leaf curl", "CLCuD"],
+          "severity_potential": "Very High",
+          "symptoms": [
+            "Upward curling of leaves",
+            "Vein thickening and leaf enations (outgrowths on undersurface)",
+            "Stunted plant growth",
+            "Leaf cup-shaped appearance",
+            "Severe reduction in boll formation"
+          ],
+          "treatments": [
+            "Imidacloprid 17.8 SL @ 0.3 ml/liter for whitefly control",
+            "Thiamethoxam 25% WG @ 0.5 g/liter",
+            "No cure for viral infection — manage vector"
+          ],
+          "prevention": [
+            "Use resistant/tolerant varieties (MRC-7361, RCH-2 BT)",
+            "Whitefly monitoring and control from early stages",
+            "Intercrop with barrier crops"
+          ],
+          "icar_recommendation": true
+        },
+        {
+          "name": "Cotton Bacterial Blight",
+          "pathogen": "Xanthomonas axonopodis pv. malvacearum",
+          "aliases": ["Angular leaf spot", "Bacterial blight", "black arm"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Angular water-soaked spots on leaves limited by veins",
+            "Spots turn dark brown to black",
+            "Defoliation in severe cases",
+            "Blackening of bolls"
+          ],
+          "treatments": [
+            "Spray Streptomycin Sulphate + Copper Oxychloride",
+            "Copper oxychloride 50% WP @ 3 g/liter"
+          ],
+          "prevention": ["Use disease-free seeds", "Crop rotation"]
+        },
+        {
+          "name": "Healthy",
+          "aliases": ["normal"],
+          "symptoms": ["Green leaves", "Normal boll development"]
+        }
+      ]
+    },
+    "maize": {
+      "local_names": ["makka", "bhutta", "corn"],
+      "importance": "Third most important cereal crop in India",
+      "datasets_covered": ["PlantVillage", "SAGE", "CDDMBench"],
+      "diseases": [
+        {
+          "name": "Maize Northern Leaf Blight",
+          "pathogen": "Exserohilum turcicum",
+          "aliases": ["Northern corn leaf blight", "NLB", "turcicum leaf blight"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Long elliptical gray-green to tan lesions on leaves",
+            "Lesions 2.5 to 15 cm long",
+            "Lesions parallel to leaf edges",
+            "Dark fungal sporulation visible on lesions",
+            "Lower leaves affected first, moving upward"
+          ],
+          "treatments": [
+            "Spray Mancozeb 75% WP @ 2.5 g/liter",
+            "Propiconazole 25% EC @ 1 ml/liter",
+            "Tebuconazole 25.9% EC @ 1 ml/liter"
+          ],
+          "prevention": [
+            "Use resistant hybrids (HQPM1, DHM117)",
+            "Crop rotation with non-host crops",
+            "Early planting"
+          ]
+        },
+        {
+          "name": "Maize Gray Leaf Spot",
+          "pathogen": "Cercospora zeae-maydis",
+          "aliases": ["Gray leaf spot", "GLS"],
+          "severity_potential": "Medium",
+          "symptoms": [
+            "Small rectangular gray to tan lesions",
+            "Lesions run parallel to leaf veins",
+            "Grayish powdery appearance due to sporulation"
+          ],
+          "treatments": [
+            "Mancozeb 75% WP @ 2.5 g/liter",
+            "Propiconazole 25% EC @ 1 ml/liter"
+          ],
+          "prevention": ["Crop rotation", "Resistant hybrids"]
+        },
+        {
+          "name": "Fall Armyworm",
+          "pathogen": "Spodoptera frugiperda (insect pest)",
+          "aliases": ["FAW", "American armyworm"],
+          "severity_potential": "Very High",
+          "symptoms": [
+            "Ragged holes in leaves from larval feeding",
+            "Frass (greenish feces) visible in leaf whorls",
+            "Damaged leaf whorl with characteristic 'window-pane' feeding pattern",
+            "Papery transparent appearance of damaged young leaves"
+          ],
+          "treatments": [
+            "Spray Emamectin Benzoate 5% SG @ 0.4 g/liter",
+            "Spinetoram 11.7% SC @ 0.5 ml/liter",
+            "Chlorantraniliprole 18.5% SC @ 0.4 ml/liter",
+            "Apply insecticide into leaf whorl"
+          ],
+          "prevention": [
+            "Early planting",
+            "Pheromone traps @ 4/acre",
+            "Biological control with Trichogramma"
+          ],
+          "icar_recommendation": true
+        },
+        {
+          "name": "Healthy",
+          "aliases": ["normal"],
+          "symptoms": ["Green leaves", "Normal growth"]
+        }
+      ]
+    },
+    "sugarcane": {
+      "local_names": ["ganna", "eekh"],
+      "importance": "Major cash crop — India is second largest producer",
+      "datasets_covered": ["SAGE", "CDDMBench"],
+      "diseases": [
+        {
+          "name": "Red Rot",
+          "pathogen": "Colletotrichum falcatum",
+          "aliases": ["Sugarcane red rot", "cancer of sugarcane"],
+          "severity_potential": "Very High",
+          "symptoms": [
+            "Drying of leaves starting from leaf tip",
+            "Red discoloration inside stalk with white patches",
+            "Sour smell from affected stalk",
+            "Wilting and death of top leaves"
+          ],
+          "treatments": [
+            "No effective chemical cure",
+            "Remove and burn infected plants",
+            "Drench with Carbendazim 50% WP @ 1g/liter"
+          ],
+          "prevention": [
+            "Use resistant varieties (CoH-92, CoSe92423)",
+            "Hot water treatment of setts at 50°C for 2 hours",
+            "Avoid water-logging"
+          ],
+          "icar_recommendation": true
+        },
+        {
+          "name": "Wilt",
+          "pathogen": "Fusarium sacchari / Cephalosporium sacchari",
+          "aliases": ["Sugarcane wilt", "Fusarium wilt"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Yellowing and drying of leaves starting from lower leaves",
+            "Internal stalk shows yellow to red discoloration",
+            "Shriveling of stalks"
+          ],
+          "treatments": [
+            "Carbendazim sett treatment @ 0.1% solution",
+            "Remove and destroy affected stalks"
+          ],
+          "prevention": ["Resistant varieties", "Proper irrigation management"]
+        }
+      ]
+    },
+    "groundnut": {
+      "local_names": ["mungfali", "peanut"],
+      "importance": "Major oilseed crop — India is second largest producer",
+      "datasets_covered": ["SAGE", "CDDMBench"],
+      "diseases": [
+        {
+          "name": "Early Leaf Spot",
+          "pathogen": "Cercospora arachidicola",
+          "aliases": ["Early spot", "Cercospora leaf spot"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Small circular yellowish spots on upper leaf surface",
+            "Spots turn dark brown to black",
+            "Yellow halo visible around spots",
+            "Premature defoliation"
+          ],
+          "treatments": [
+            "Spray Mancozeb 75% WP @ 2.5 g/liter",
+            "Chlorothalonil 75% WP @ 2 g/liter",
+            "Carbendazim 50% WP @ 1 g/liter"
+          ],
+          "prevention": [
+            "Crop rotation",
+            "Seed treatment with Carbendazim",
+            "Resistant varieties (ICGV86590)"
+          ]
+        },
+        {
+          "name": "Tikka Disease",
+          "pathogen": "Phaeoisariopsis personata (Late Leaf Spot)",
+          "aliases": ["Late leaf spot", "Tikka", "Cercosporidium"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Dark brown to black spots, larger than early leaf spot",
+            "No yellow halo (unlike early leaf spot)",
+            "Spots appear on both upper and lower leaf surfaces",
+            "Gray sporulation on underside of spots"
+          ],
+          "treatments": [
+            "Mancozeb 75% WP @ 2.5 g/liter",
+            "Hexaconazole 5% EC @ 2 ml/liter"
+          ],
+          "prevention": ["Crop rotation", "Resistant varieties"]
+        }
+      ]
+    },
+    "mustard": {
+      "local_names": ["sarson", "rai", "rapeseed"],
+      "importance": "Major Rabi oilseed crop in India",
+      "datasets_covered": ["SAGE"],
+      "diseases": [
+        {
+          "name": "Alternaria Blight",
+          "pathogen": "Alternaria brassicae / A. brassicicola",
+          "aliases": ["Black spot", "dark leaf spot"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Circular dark brown to black spots with concentric rings",
+            "Spots on leaves, stems, and pods",
+            "Yellow halo in early stages",
+            "Premature dropping of leaves"
+          ],
+          "treatments": [
+            "Spray Mancozeb 75% WP @ 2.5 g/liter",
+            "Iprodione 50% WP @ 2 g/liter",
+            "Tebuconazole 25.9% EC @ 1 ml/liter"
+          ],
+          "prevention": [
+            "Seed treatment with Thiram @ 2g/kg seed",
+            "Crop rotation",
+            "Resistant varieties (Pusa Bold, Pusa Tarak)"
+          ],
+          "icar_recommendation": true
+        },
+        {
+          "name": "White Rust",
+          "pathogen": "Albugo candida",
+          "aliases": ["White blister", "staghead"],
+          "severity_potential": "High",
+          "symptoms": [
+            "White blister-like pustules on lower leaf surface",
+            "Chlorotic (yellow) spots on upper surface corresponding to pustules",
+            "Distortion and twisting of shoots and flower heads (staghead)"
+          ],
+          "treatments": [
+            "Spray Metalaxyl + Mancozeb @ 2.5 g/liter",
+            "Fosetyl-Al 80% WP @ 3 g/liter"
+          ],
+          "prevention": ["Early sowing", "Resistant varieties", "Crop rotation"]
+        }
+      ]
+    },
+    "chilli": {
+      "local_names": ["mirchi", "lal mirch", "hari mirch"],
+      "importance": "Important spice and vegetable crop in India",
+      "datasets_covered": ["SAGE", "CDDMBench", "Roboflow"],
+      "diseases": [
+        {
+          "name": "Chilli Anthracnose",
+          "pathogen": "Colletotrichum capsici / C. acutatum",
+          "aliases": ["Fruit rot", "Dieback", "Anthracnose"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Sunken circular spots on fruits — starts at tip",
+            "Dark brown to black spots with concentric rings on fruits",
+            "Pink to orange spore masses in humid conditions",
+            "Die-back of twigs from tip"
+          ],
+          "treatments": [
+            "Spray Carbendazim 50% WP @ 1 g/liter",
+            "Hexaconazole 5% EC @ 2 ml/liter",
+            "Copper oxychloride 50% WP @ 3 g/liter"
+          ],
+          "prevention": [
+            "Seed treatment with Carbendazim @ 2g/kg",
+            "Remove and destroy infected fruits and twigs",
+            "Avoid injury to fruits"
+          ]
+        },
+        {
+          "name": "Chilli Leaf Curl Virus",
+          "pathogen": "Chilli Leaf Curl Virus (ChiLCV) — whitefly transmitted",
+          "aliases": ["Leaf curl", "viral disease"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Curling and crinkling of young leaves",
+            "Stunted plant growth",
+            "Mosaic pattern on leaves",
+            "Reduced fruit set"
+          ],
+          "treatments": [
+            "Imidacloprid 17.8 SL @ 0.3 ml/liter for whitefly",
+            "Remove infected plants"
+          ],
+          "prevention": ["Resistant varieties", "Yellow sticky traps", "Nylon net nursery"]
+        },
+        {
+          "name": "Powdery Mildew",
+          "pathogen": "Leveillula taurica",
+          "aliases": ["Powdery mildew"],
+          "severity_potential": "Medium",
+          "symptoms": [
+            "White powdery growth on upper leaf surface",
+            "Yellowing of leaves",
+            "Premature leaf drop"
+          ],
+          "treatments": [
+            "Spray Sulphur 80% WP @ 3 g/liter",
+            "Hexaconazole 5% EC @ 2 ml/liter"
+          ],
+          "prevention": ["Proper ventilation", "Avoid excessive irrigation"]
+        }
+      ]
+    },
+    "onion": {
+      "local_names": ["pyaaz", "kanda"],
+      "importance": "Most widely consumed vegetable crop in India",
+      "datasets_covered": ["SAGE"],
+      "diseases": [
+        {
+          "name": "Purple Blotch",
+          "pathogen": "Alternaria porri",
+          "aliases": ["Leaf blight", "purple leaf spot"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Small white lesions with purple center on leaves",
+            "Lesions enlarge to elliptical shape with purple-brown color",
+            "Yellow border around lesions",
+            "Leaves collapse from tip"
+          ],
+          "treatments": [
+            "Spray Mancozeb 75% WP @ 2.5 g/liter",
+            "Iprodione 50% WP @ 2 g/liter",
+            "Carbendazim 50% WP @ 1 g/liter"
+          ],
+          "prevention": [
+            "Crop rotation",
+            "Balanced fertilization",
+            "Remove crop debris"
+          ],
+          "icar_recommendation": true
+        },
+        {
+          "name": "Stemphylium Blight",
+          "pathogen": "Stemphylium vesicarium",
+          "aliases": ["Stemphylium leaf blight"],
+          "severity_potential": "Medium",
+          "symptoms": [
+            "Small water-soaked yellowish spots that turn light tan",
+            "Spots with dark brown border",
+            "Leaves die from tip"
+          ],
+          "treatments": ["Iprodione 50% WP @ 2 g/liter", "Mancozeb 75% WP @ 2.5 g/liter"],
+          "prevention": ["Crop rotation", "Avoid waterlogging"]
+        }
+      ]
+    },
+    "soybean": {
+      "local_names": ["soyabean", "bhat"],
+      "importance": "Major protein crop in central India (MP, Maharashtra)",
+      "datasets_covered": ["PlantVillage", "SAGE"],
+      "diseases": [
+        {
+          "name": "Soybean Bacterial Pustule",
+          "pathogen": "Xanthomonas axonopodis pv. glycines",
+          "aliases": ["Bacterial pustule"],
+          "severity_potential": "Medium",
+          "symptoms": [
+            "Small pale green spots with raised center (pustules) on leaves",
+            "Yellow halo around pustules",
+            "Premature defoliation in severe cases"
+          ],
+          "treatments": ["Copper oxychloride spray", "Streptomycin-based spray"],
+          "prevention": ["Disease-free seed", "Crop rotation"]
+        },
+        {
+          "name": "Soybean Rust",
+          "pathogen": "Phakopsora pachyrhizi",
+          "aliases": ["Asian soybean rust", "soybean rust"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Small tan to gray lesions on lower leaf surface",
+            "Tan to reddish-brown pustules visible on underside",
+            "Lesions enlarge and turn dark brown",
+            "Premature defoliation"
+          ],
+          "treatments": [
+            "Trifloxystrobin + Tebuconazole @ 1 ml/liter",
+            "Pyraclostrobin + Epoxiconazole"
+          ],
+          "prevention": ["Early sowing", "Resistant varieties"]
+        }
+      ]
+    },
+    "grape": {
+      "local_names": ["angoor", "draksha"],
+      "importance": "Important horticultural crop in Maharashtra, Karnataka",
+      "datasets_covered": ["PlantVillage", "SAGE"],
+      "diseases": [
+        {
+          "name": "Grape Powdery Mildew",
+          "pathogen": "Uncinula necator",
+          "aliases": ["Oidium", "Powdery mildew"],
+          "severity_potential": "High",
+          "symptoms": [
+            "White powdery patches on leaves, shoots, and berries",
+            "Leaves show chlorosis beneath powdery patches",
+            "Berries crack and shrivel when infected young"
+          ],
+          "treatments": [
+            "Sulphur 80% WP @ 3 g/liter",
+            "Hexaconazole 5% EC @ 2 ml/liter",
+            "Myclobutanil 10% WP @ 1 g/liter"
+          ],
+          "prevention": ["Pruning for air circulation", "Resistant varieties"]
+        },
+        {
+          "name": "Grape Downy Mildew",
+          "pathogen": "Plasmopara viticola",
+          "aliases": ["Downy mildew", "Peronospora"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Yellow oily spots on upper leaf surface",
+            "White cottony spore masses on underside of leaves",
+            "Affected berries turn brown and mummify",
+            "Shoot distortion"
+          ],
+          "treatments": [
+            "Metalaxyl + Mancozeb @ 2.5 g/liter",
+            "Fosetyl-Al 80% WP @ 3 g/liter"
+          ],
+          "prevention": ["Avoid wetting foliage", "Proper canopy management"]
+        },
+        {
+          "name": "Healthy",
+          "aliases": ["normal"],
+          "symptoms": ["Green shiny leaves", "Firm bunches"]
+        }
+      ]
+    },
+    "banana": {
+      "local_names": ["kela", "kadali"],
+      "importance": "Most popular fruit crop in India",
+      "datasets_covered": ["SAGE", "CDDMBench"],
+      "diseases": [
+        {
+          "name": "Panama Wilt",
+          "pathogen": "Fusarium oxysporum f. sp. cubense",
+          "aliases": ["Fusarium wilt", "banana wilt"],
+          "severity_potential": "Very High",
+          "symptoms": [
+            "Yellowing of lower leaves starting from margins",
+            "Wilting and collapse of leaves",
+            "Brown discoloration of pseudostem when cut",
+            "Plant death without recovery"
+          ],
+          "treatments": [
+            "No effective chemical cure",
+            "Uproot and burn affected plants",
+            "Drench with Carbendazim @ 2g/liter around healthy plants"
+          ],
+          "prevention": [
+            "Use disease-free tissue culture plants",
+            "Avoid infected fields",
+            "Resistant varieties (Grand Naine, Williams)"
+          ],
+          "icar_recommendation": true
+        },
+        {
+          "name": "Sigatoka Leaf Spot",
+          "pathogen": "Mycosphaerella musicola",
+          "aliases": ["Yellow Sigatoka", "Cercospora leaf spot"],
+          "severity_potential": "High",
+          "symptoms": [
+            "Pale yellowish streaks on young leaves",
+            "Streaks turn brown with gray center",
+            "Leaves die prematurely",
+            "Premature ripening of bunch"
+          ],
+          "treatments": [
+            "Propiconazole 25% EC @ 1 ml/liter",
+            "Carbendazim 50% WP @ 1 g/liter"
+          ],
+          "prevention": ["Remove diseased leaves", "Adequate plant spacing"]
+        }
+      ]
+    }
+  }
+}
+

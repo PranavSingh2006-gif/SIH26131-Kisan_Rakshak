@@ -1,0 +1,243 @@
+/* HotspotSurveillance.css */
+
+/* ── Leaflet z-index containment ──────────────────────────────────────────────
+   Leaflet panes use z-index 200–600 by default. Without containment they bleed
+   above the fixed topbar (z-index: 30) when the user scrolls.
+   `isolation: isolate` on .hotspot-wrapper creates a new stacking context that
+   traps all child z-indexes, and the rules below ensure popup/controls stay
+   within bounds too.
+   ────────────────────────────────────────────────────────────────────────── */
+.hotspot-wrapper .leaflet-pane,
+.hotspot-wrapper .leaflet-top,
+.hotspot-wrapper .leaflet-bottom,
+.hotspot-wrapper .leaflet-control {
+  z-index: auto !important;
+}
+.hotspot-wrapper .leaflet-pane { z-index: 4 !important; }
+.hotspot-wrapper .leaflet-overlay-pane { z-index: 5 !important; }
+.hotspot-wrapper .leaflet-marker-pane { z-index: 6 !important; }
+.hotspot-wrapper .leaflet-popup-pane { z-index: 7 !important; }
+.hotspot-wrapper .leaflet-control { z-index: 8 !important; }
+
+.hotspot-wrapper {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #ececec;
+  padding: 20px 22px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  position: relative;       /* establish stacking context */
+  isolation: isolate;       /* trap Leaflet's z-indexes inside this box */
+  z-index: 0;               /* never rise above the fixed header */
+}
+
+.hotspot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.hotspot-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #8a8a8a;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+}
+
+.hotspot-header h2 {
+  margin: 0;
+  font-size: 19px;
+  color: #1a1a1a;
+}
+
+.hotspot-refresh {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+}
+
+.hotspot-refresh:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.hotspot-stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.hotspot-stat {
+  flex: 1;
+  border: 1px solid #ececec;
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hotspot-stat strong {
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.hotspot-stat span {
+  font-size: 12px;
+  color: #777;
+  text-transform: capitalize;
+}
+
+.hotspot-stat.critical strong { color: #dc2626; }
+.hotspot-stat.high strong { color: #ea580c; }
+.hotspot-stat.medium strong { color: #d97706; }
+.hotspot-stat.low strong { color: #16a34a; }
+
+.hotspot-stat.active {
+  border-color: #145a32;
+  background: #f0f7f2;
+}
+
+.hotspot-error {
+  color: #b45309;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.hotspot-loading {
+  color: #888;
+  font-size: 13px;
+  padding: 20px;
+  text-align: center;
+}
+
+.hotspot-body {
+  display: flex;
+  gap: 18px;
+}
+
+.hotspot-map-panel {
+  flex: 1.4;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hotspot-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  font-size: 12px;
+  color: #555;
+  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-item i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.hotspot-list-panel {
+  flex: 1;
+  min-width: 280px;
+  max-height: 560px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.hotspot-list-item {
+  text-align: left;
+  background: #fafafa;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hotspot-list-item:hover {
+  background: #f2f2f2;
+}
+
+.hotspot-list-item.selected {
+  border-color: #145a32;
+  background: #f0f7f2;
+}
+
+.hotspot-list-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.hotspot-district-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.hotspot-badge {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.hotspot-badge.critical { background: #dc2626; }
+.hotspot-badge.high { background: #ea580c; }
+.hotspot-badge.medium { background: #d97706; }
+.hotspot-badge.low { background: #16a34a; }
+
+.hotspot-list-detail {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #555;
+}
+
+.hotspot-list-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #888;
+  align-items: center;
+}
+
+.hotspot-trend.up { color: #dc2626; }
+.hotspot-trend.down { color: #16a34a; }
+.hotspot-trend.stable { color: #888; }
+
+@media (max-width: 900px) {
+  .hotspot-body {
+    flex-direction: column;
+  }
+  .hotspot-list-panel {
+    max-height: 320px;
+  }
+  .hotspot-stats {
+    flex-wrap: wrap;
+  }
+}
+
