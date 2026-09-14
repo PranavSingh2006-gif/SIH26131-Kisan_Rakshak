@@ -1,0 +1,12 @@
+{
+  "name": "kisanrakshak-root",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node start-dev.js",
+    "dev:backend": "npm --prefix kisanrakshak-backend run dev",
+    "dev:frontend": "npm --prefix kisanrakshak-frontend run dev"
+  }
+}
+
