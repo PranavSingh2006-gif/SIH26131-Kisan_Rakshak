@@ -28,7 +28,7 @@ const UserSchema = new Schema<IUser>(
     phone: {
       type: String,
       required: [true, "Phone number is required"],
-      unique: true,                       // ← Primary unique key
+      unique: true,
       match: [/^[0-9]{10}$/, "Phone must be 10 digits"],
     },
     password: {
@@ -58,4 +58,3 @@ UserSchema.methods.comparePassword = function (candidate: string) {
 }
 
 export default mongoose.model<IUser>("User", UserSchema)
-

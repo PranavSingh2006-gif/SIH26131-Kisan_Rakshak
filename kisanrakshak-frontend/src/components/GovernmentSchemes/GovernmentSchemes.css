@@ -1,0 +1,41 @@
+/* ── GovernmentSchemes Section Styles ────────────────────────────────────────── */
+
+.scheme-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px
+}
+
+.scheme {
+    background: #fff;
+    border: 1px solid #e3e9e4;
+    border-radius: 9px;
+    padding: 18px;
+    display: flex;
+    gap: 13px
+}
+
+.scheme > span { font-size: 25px }
+.scheme b      { font-size: 13px }
+.scheme p      { font-size: 11px; color: #748078; line-height: 1.5 }
+
+.scheme button {
+    border: 0;
+    background: none;
+    padding: 12px 0 0;
+    color: #2b704d;
+    font-weight: 800;
+    font-size: 9px;
+    cursor: pointer
+}
+
+body.dark .scheme {
+    background: #19251e;
+    border-color: #2b3a30
+}
+
+body.dark .scheme p { color: #abb8ae }
+
+@media(max-width:650px) {
+    .scheme-grid { grid-template-columns: 1fr }
+}

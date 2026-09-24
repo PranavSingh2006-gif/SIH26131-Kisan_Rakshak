@@ -885,6 +885,16 @@ main {
     cursor: pointer
 }
 
+.chat-input button:disabled {
+    background: #9dbfad;
+    cursor: not-allowed
+}
+
+.chat-input input:disabled {
+    background: #f0f4f1;
+    color: #aaa
+}
+
 .solution-map .problem-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -2132,6 +2142,16 @@ main {
     cursor: pointer
 }
 
+.chat-input button:disabled {
+    background: #9dbfad;
+    cursor: not-allowed
+}
+
+.chat-input input:disabled {
+    background: #f0f4f1;
+    color: #aaa
+}
+
 .solution-map .problem-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -2492,4 +2512,47 @@ body.dark .weather-main,
     .form-grid {
         grid-template-columns: 1fr
     }
+}
+/* -- Voice / Mic Button --------------------------------- */
+.mic-btn {
+    border: 0;
+    background: #f0f4f1;
+    border-radius: 6px;
+    padding: 0 9px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0
+}
+
+.mic-btn:hover:not(:disabled) {
+    background: #dff0e7
+}
+
+.mic-btn.mic-active {
+    background: #ffe4e4;
+    animation: pulse-mic 1s infinite
+}
+
+.mic-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed
+}
+
+@keyframes pulse-mic {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220,50,50,0.3) }
+    50%       { transform: scale(1.08); box-shadow: 0 0 0 5px rgba(220,50,50,0) }
+}
+
+body.dark .mic-btn {
+    background: #2a3d30;
+    color: #c5d9cb
+}
+
+body.dark .mic-btn:hover:not(:disabled) {
+    background: #3a5045
+}
+
+body.dark .mic-btn.mic-active {
+    background: #4a1a1a
 }

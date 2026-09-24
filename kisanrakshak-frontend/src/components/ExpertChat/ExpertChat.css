@@ -1,0 +1,39 @@
+/* ── ExpertChat Styles — reuses shared chat class names ─────────────────────── */
+/* Most styles come from AIAssistantChat.css via shared class names.             */
+/* Only expert-specific overrides needed here.                                   */
+
+.expert-panel {
+    display: grid;
+    grid-template-columns: .7fr 1.3fr;
+    background: #eaf3ed;
+    border: 1px solid #d7e5db;
+    border-radius: 10px;
+    padding: 20px;
+    gap: 20px
+}
+
+.expert-copy { padding: 15px }
+
+.expert-avatar { font-size: 32px }
+
+.expert-copy h3 { font-size: 15px }
+
+.expert-copy p  { font-size: 10px; color: #617066; line-height: 1.6 }
+
+.expert-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px
+}
+
+.expert-points span {
+    background: #fff;
+    padding: 7px;
+    border-radius: 20px;
+    font-size: 8px;
+    color: #34664b
+}
+
+@media(max-width:1050px) {
+    .expert-panel { grid-template-columns: 1fr }
+}

@@ -1,0 +1,98 @@
+/* ── WeatherAdvisory Section Styles ─────────────────────────────────────────── */
+
+.weather-main {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    background: #f6faf5;
+    border-radius: 8px;
+    padding: 16px
+}
+
+.temp {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1f5c3e
+}
+
+.temp small {
+    display: block;
+    font-size: 9px;
+    color: #758178;
+    font-weight: 600
+}
+
+.weather-advice b  { font-size: 10px }
+.weather-advice p  { font-size: 12px; line-height: 1.5; color: #69776d; margin: 5px 0 }
+.weather-advice span { font-size: 8px; color: #859087 }
+
+.forecast {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 13px
+}
+
+.forecast div {
+    text-align: center;
+    border: 1px solid #edf0ed;
+    border-radius: 7px;
+    padding: 9px 3px
+}
+
+.forecast b,
+.forecast strong,
+.forecast small,
+.forecast span { display: block }
+
+.forecast b      { font-size: 9px; color: #69766d }
+.forecast span   { font-size: 16px; margin: 5px 0 }
+.forecast strong { font-size: 11px }
+.forecast small  { font-size: 8px; color: #89938c; margin-top: 3px }
+
+.pest-alert {
+    display: flex;
+    gap: 12px;
+    padding: 13px;
+    background: #fff7ed;
+    border: 1px solid #f0dfc5;
+    border-radius: 8px
+}
+
+.pest-image {
+    width: 43px;
+    height: 43px;
+    border-radius: 8px;
+    background: #f4dfc0;
+    display: grid;
+    place-items: center;
+    font-size: 23px
+}
+
+.pest-alert b      { font-size: 12px }
+.pest-alert p      { font-size: 11px; color: #7a746a; margin: 4px 0 }
+.pest-alert strong { font-size: 8px; color: #a16e19 }
+
+.advice-box {
+    font-size: 9px;
+    color: #66736b;
+    margin: 13px 0
+}
+
+.advice-box b  { font-size: 10px; color: #375343 }
+.advice-box ul { margin: 7px 0 0; padding-left: 17px; line-height: 1.7 }
+
+body.dark .weather-main { background: #142019 }
+
+@media(max-width:1050px) {
+    .main-grid { grid-template-columns: 1fr }
+}
+
+@media(max-width:650px) {
+    .weather-main  { display: block }
+    .weather-advice { margin-top: 10px }
+    .forecast {
+        grid-template-columns: repeat(5, 1fr);
+        overflow: auto
+    }
+}

@@ -1,0 +1,100 @@
+/* ── AIAssistant Chat Styles ─────────────────────────────────────────────────── */
+
+.chat {
+    background: #fff;
+    border: 1px solid #dfe7e0;
+    border-radius: 9px;
+    overflow: hidden
+}
+
+.chat-head {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e8ece8;
+    font-size: 10px
+}
+
+.online {
+    float: right;
+    color: #2b8053;
+    font-size: 8px
+}
+
+.messages {
+    padding: 15px;
+    height: 220px;
+    overflow: auto;
+    background: #f9fbf9
+}
+
+.msg {
+    max-width: 82%;
+    padding: 9px 11px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 9px;
+    line-height: 1.5
+}
+
+.msg.bot  { background: #e6f1e9; color: #395445 }
+.msg.user { margin-left: auto; background: #2b704d; color: #fff }
+
+.chat-input {
+    display: flex;
+    gap: 5px;
+    padding: 9px;
+    border-top: 1px solid #e8ece8
+}
+
+.chat-input input {
+    flex: 1;
+    border: 1px solid #dce4de;
+    border-radius: 6px;
+    padding: 9px;
+    font-size: 9px;
+    outline: none
+}
+
+.chat-input button {
+    border: 0;
+    background: #2b704d;
+    color: #fff;
+    border-radius: 6px;
+    padding: 0 11px;
+    font-size: 9px;
+    cursor: pointer
+}
+
+.chat-input button:disabled {
+    background: #9dbfad;
+    cursor: not-allowed
+}
+
+.chat-input input:disabled {
+    background: #f0f4f1;
+    color: #aaa
+}
+
+.mic-btn {
+    border: 1px solid #dce4de !important;
+    background: #f8faf8 !important;
+    color: #334155 !important;
+    border-radius: 6px;
+    padding: 0 8px !important;
+    font-size: 14px !important;
+    cursor: pointer;
+    transition: all 0.2s
+}
+
+.mic-btn.mic-active {
+    background: #fee2e2 !important;
+    border-color: #fca5a5 !important;
+    animation: pulse 1s infinite
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1 }
+    50%       { opacity: 0.6 }
+}
+
+body.dark .chat { background: #19251e; border-color: #2b3a30 }
+body.dark .messages { background: #142019 }

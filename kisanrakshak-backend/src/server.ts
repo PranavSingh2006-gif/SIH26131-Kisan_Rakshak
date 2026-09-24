@@ -8,6 +8,7 @@ import path from "path"
 import mongoose from "mongoose"
 import authRouter from "./routes/auth"
 import User from "./models/User"
+import CropScanHistory from "./models/CropScanHistory"
 
 dotenv.config()
 
@@ -151,11 +152,13 @@ function buildDatasetResult(cropMatch: { key: string; entry: CropEntry } | null,
   }
 }
 
-/** Merge AI + Dataset into a final best result */
+/** Merge AI + Dataset + Past History into a final best result */
 function buildFinalResult(
   aiResult: any,
   datasetResult: ReturnType<typeof buildDatasetResult>,
-  overlapScore: number
+  overlapScore: number,
+  historyComparison?: any,
+  lastScan?: any
 ) {
   const hasDataset = !!datasetResult
   const highOverlap = overlapScore >= 50
@@ -184,12 +187,20 @@ function buildFinalResult(
     ...kbSymptoms.slice(0, 3).map((s: string) => `📚 ${s}`)  // KB-known (up to 3)
   ]
 
-  // Treatment: KB (ICAR-verified) preferred, AI supplements
-  const kbTreatment = hasDataset ? datasetResult!.treatment : []
+  // Treatment: If AI adapted prescriptions based on history, prioritize adapted treatments
+  const prescriptionsChanged = !!historyComparison?.prescriptionsChanged
   const aiTreatment: string[] = aiResult.treatment || []
-  const mergedTreatment = kbTreatment.length >= 2
-    ? kbTreatment
-    : [...kbTreatment, ...aiTreatment].slice(0, 5)
+  const kbTreatment = hasDataset ? datasetResult!.treatment : []
+
+  let mergedTreatment: string[] = []
+  if (prescriptionsChanged && aiTreatment.length > 0) {
+    // Farmer's previous treatments failed — present the newly adapted AI prescription first, supplemented by ICAR alternatives
+    mergedTreatment = [...aiTreatment, ...kbTreatment.filter(kt => !aiTreatment.includes(kt))].slice(0, 5)
+  } else {
+    mergedTreatment = kbTreatment.length >= 2
+      ? kbTreatment
+      : [...kbTreatment, ...aiTreatment].slice(0, 5)
+  }
 
   // Prevention: same logic
   const kbPrevention = hasDataset ? datasetResult!.prevention : []
@@ -197,6 +208,9 @@ function buildFinalResult(
   const mergedPrevention = kbPrevention.length >= 2
     ? kbPrevention
     : [...kbPrevention, ...aiPrevention].slice(0, 4)
+
+  const hasHistory = !!lastScan
+  const efficacyStatus = historyComparison?.efficacyStatus || (hasHistory ? "No Improvement / Persistent" : "Initial Scan")
 
   return {
     disease: diseaseName,
@@ -211,6 +225,18 @@ function buildFinalResult(
     overlapScore,
     datasetsUsed: hasDataset ? datasetResult!.datasets : [],
     agreementLevel: overlapScore >= 70 ? "High" : overlapScore >= 40 ? "Medium" : overlapScore > 0 ? "Low" : "None",
+    historyComparison: {
+      hasHistory,
+      previousTreatmentWorked: historyComparison?.previousTreatmentWorked ?? (efficacyStatus === "Improved" ? true : efficacyStatus === "Initial Scan" ? null : false),
+      efficacyStatus,
+      progressNotes: historyComparison?.progressNotes || (hasHistory ? "Comparative scan evaluated against previous records." : "First baseline scan recorded for this crop."),
+      prescriptionsChanged,
+      prescriptionReason: historyComparison?.prescriptionReason || (prescriptionsChanged ? "Previous prescriptions did not produce desired recovery; alternative treatment regimen formulated." : ""),
+      previousScanDate: lastScan?.scanDate || null,
+      previousDisease: lastScan?.disease || null,
+      previousSeverity: lastScan?.severity || null,
+      previousTreatments: lastScan?.treatment || [],
+    },
   }
 }
 
@@ -234,6 +260,41 @@ KNOWN DISEASES (${entry.diseases.length} in database):
 ${diseaseList}
 
 Use the EXACT disease name from this list if it matches what you see.`
+}
+
+// ─── In-Memory History Cache (for offline/demo fallback) ──────────────────────
+const inMemoryHistory: any[] = []
+
+/** Build comparative historical prompt context from previous crop scan */
+function buildHistoryContext(lastScan: any): string {
+  if (!lastScan) {
+    return `PAST SCAN HISTORY FOR THIS CROP:
+This is the FIRST baseline scan recorded for this farmer's crop. No previous scan records exist.`
+  }
+
+  const scanDateStr = new Date(lastScan.scanDate).toLocaleDateString("en-IN", {
+    day: "numeric", month: "short", year: "numeric"
+  })
+
+  return `PAST SCAN HISTORY & PREVIOUS PRESCRIPTIONS (MANDATORY COMPARISON):
+The farmer previously scanned this same crop on ${scanDateStr}:
+- Past Growth Stage: ${lastScan.growthStage}
+- Past Diagnosed Disease: ${lastScan.disease}
+- Past Severity Level: ${lastScan.severity}
+- Past Reported Symptoms: ${lastScan.symptoms || "None specified"}
+- PREVIOUS PRESCRIPTIONS / TREATMENTS GIVEN TO FARMER:
+${(lastScan.treatment || []).map((t: string, i: number) => `  ${i + 1}. ${t}`).join("\n")}
+
+CRITICAL COMPARATIVE EVALUATION & ADAPTIVE PRESCRIPTION DIRECTIVE:
+1. Carefully compare the new uploaded image and current symptoms with the previous scan details above.
+2. Determine whether the previously prescribed treatments produced the desired outcome:
+   - "Improved": symptoms are visibly fading, plant tissue recovering, or disease severity dropped.
+   - "No Improvement / Persistent": symptoms and active lesions remain unresolved despite following prior advice.
+   - "Worsened": disease has spread, more severe lesions/wilting, or severity escalated.
+3. ADAPTIVE PRESCRIPTION RULE (CRITICAL):
+   - If the previous prescriptions DID NOT work (persistent or worsened): DO NOT simply repeat the same failed treatments! Formulate NEW, alternative, or second-line prescriptions/treatments (e.g. switch fungicide/bactericide mode of action, integrate biological antagonists, adjust soil amendments or systemic interventions).
+   - Flag "prescriptionsChanged": true and state clearly in "prescriptionReason" why the treatment plan was adapted.
+   - If previous treatment worked, indicate positive progress and recommend recovery maintenance.`
 }
 
 // ─── Routes ────────────────────────────────────────────────────────────────────
@@ -281,6 +342,7 @@ app.get("/api/health", (_req, res) => {
 app.post("/api/analyze", upload.single("image"), async (req, res) => {
   try {
     const { cropName, growthStage, symptoms } = req.body || {}
+    const userId    = req.body?.userId    || "DEMO_USER"
     const location  = req.body?.location  || "India"
     const sowingDate = req.body?.sowingDate || new Date().toISOString().slice(0, 10)
 
@@ -291,19 +353,52 @@ app.post("/api/analyze", upload.single("image"), async (req, res) => {
       return res.status(400).json({ success: false, message: "Crop image is required" })
     }
 
-    console.log("🌱 Analyzing:", { cropName, growthStage, location })
+    console.log("🌱 Analyzing:", { userId, cropName, growthStage, location })
 
-    // ── Step 1: KB lookup ──────────────────────────────────────────────────────
+    // ── Step 1: Historical Scan Lookup for this User + Crop ───────────────────
+    let pastScans: any[] = []
+    try {
+      if (mongoose.connection.readyState === 1) {
+        pastScans = await CropScanHistory.find({
+          userId,
+          cropName: { $regex: new RegExp(`^${cropName.trim()}$`, "i") }
+        })
+          .sort({ scanDate: -1 })
+          .limit(5)
+          .lean()
+      }
+    } catch (dbErr) {
+      console.warn("MongoDB history fetch warning:", dbErr)
+    }
+
+    // Check in-memory fallback cache if DB empty or offline
+    if (!pastScans.length) {
+      pastScans = inMemoryHistory
+        .filter(h => h.userId === userId && h.cropName.toLowerCase() === cropName.toLowerCase().trim())
+        .sort((a, b) => new Date(b.scanDate).getTime() - new Date(a.scanDate).getTime())
+        .slice(0, 5)
+    }
+
+    const lastScan = pastScans.length > 0 ? pastScans[0] : null
+    if (lastScan) {
+      console.log(`📜 Found past scan for ${cropName} on ${lastScan.scanDate} (Disease: ${lastScan.disease}, Severity: ${lastScan.severity})`)
+    } else {
+      console.log(`🌱 Initial baseline scan for ${userId} (${cropName})`)
+    }
+
+    // ── Step 2: KB lookup ────────────────────────────────────────────────────
     const cropMatch = findCropEntry(cropName)
     if (cropMatch) console.log(`📖 KB match: "${cropMatch.key}" (${cropMatch.entry.diseases.length} diseases)`)
     else console.log(`📖 No KB match for "${cropName}"`)
 
-    // ── Step 2: Gemini AI analysis (image-based) ───────────────────────────────
+    // ── Step 3: Gemini AI analysis with Historical Context & Adaptive Feedback ─
     const prompt = `You are an expert Indian agricultural crop disease diagnostician.
 
 FARMER CONTEXT:
 Crop: ${cropName} | Stage: ${growthStage} | Location: ${location} | Sowing: ${sowingDate}
 Reported Symptoms: ${symptoms || "None"}
+
+${buildHistoryContext(lastScan)}
 
 ${buildKnowledgeContext(cropMatch)}
 
@@ -315,7 +410,15 @@ Analyze the image carefully. Return ONLY valid JSON (no markdown):
   "symptoms": ["visual symptom observed 1", "visual symptom observed 2", "visual symptom observed 3"],
   "treatment": ["treatment 1", "treatment 2", "treatment 3"],
   "prevention": ["prevention 1", "prevention 2"],
-  "reasoning": "brief explanation of what you saw in the image"
+  "reasoning": "brief explanation of what you saw in the image",
+  "historyComparison": {
+    "hasHistory": ${!!lastScan},
+    "previousTreatmentWorked": ${lastScan ? "true or false" : "null"},
+    "efficacyStatus": "${lastScan ? "Improved or No Improvement / Persistent or Worsened" : "Initial Scan"}",
+    "progressNotes": "concise explanation evaluating whether past prescriptions worked and what changed",
+    "prescriptionsChanged": ${lastScan ? "true or false" : "false"},
+    "prescriptionReason": "why prescriptions were updated or reinforced"
+  }
 }`
 
     const response = await ai.models.generateContent({
@@ -336,24 +439,40 @@ Analyze the image carefully. Return ONLY valid JSON (no markdown):
     try {
       aiRaw = JSON.parse(aiText.replace(/```json\n?|```\n?/g, "").trim())
     } catch {
-      aiRaw = { disease: "Uncertain", confidence: "Unknown", severity: "Unknown", symptoms: [], treatment: [], prevention: [], reasoning: aiText }
+      aiRaw = {
+        disease: "Uncertain",
+        confidence: "Unknown",
+        severity: "Unknown",
+        symptoms: [],
+        treatment: [],
+        prevention: [],
+        reasoning: aiText,
+        historyComparison: {
+          hasHistory: !!lastScan,
+          previousTreatmentWorked: null,
+          efficacyStatus: lastScan ? "No Improvement / Persistent" : "Initial Scan",
+          progressNotes: "Could not evaluate comparison notes automatically.",
+          prescriptionsChanged: false,
+          prescriptionReason: "",
+        },
+      }
     }
 
-    // ── Step 3: Dataset lookup for the AI-identified disease ───────────────────
+    // ── Step 4: Dataset lookup for the AI-identified disease ─────────────────
     const kbDisease = findDiseaseInKB(cropMatch, aiRaw.disease)
     const datasetResult = buildDatasetResult(cropMatch, kbDisease, cropName)
 
-    // ── Step 4: Compute symptom overlap ───────────────────────────────────────
+    // ── Step 5: Compute symptom overlap ─────────────────────────────────────
     const overlapScore = datasetResult
       ? symptomOverlapScore(aiRaw.symptoms || [], datasetResult.knownSymptoms)
       : 0
 
     console.log(`🔗 Overlap score: ${overlapScore}% | Dataset match: ${!!datasetResult}`)
 
-    // ── Step 5: Build final merged result ─────────────────────────────────────
-    const finalResult = buildFinalResult(aiRaw, datasetResult, overlapScore)
+    // ── Step 6: Build final merged result with history comparison ───────────
+    const finalResult = buildFinalResult(aiRaw, datasetResult, overlapScore, aiRaw.historyComparison, lastScan)
 
-    // ── Step 6: Build AI-only result (clean, for comparison panel) ────────────
+    // ── Step 7: Build AI-only result (clean, for comparison panel) ──────────
     const aiResult = {
       source: "Gemini AI Vision",
       disease: aiRaw.disease,
@@ -365,17 +484,54 @@ Analyze the image carefully. Return ONLY valid JSON (no markdown):
       reasoning: aiRaw.reasoning || "",
     }
 
+    // ── Step 8: Save Scan Milestone into MongoDB & In-Memory Cache ───────────
+    const scanRecord = {
+      userId,
+      cropName,
+      growthStage,
+      location,
+      sowingDate,
+      symptoms: symptoms || "",
+      disease: finalResult.disease,
+      pathogen: finalResult.pathogen,
+      confidence: finalResult.confidence,
+      severity: finalResult.severity,
+      treatment: finalResult.treatment,
+      prevention: finalResult.prevention,
+      scanDate: new Date(),
+      historyComparison: finalResult.historyComparison,
+    }
+
+    // Save to in-memory cache
+    inMemoryHistory.unshift(scanRecord)
+
+    // Save to MongoDB
+    try {
+      if (mongoose.connection.readyState === 1) {
+        await CropScanHistory.create(scanRecord)
+        console.log(`💾 Saved scan record to MongoDB for user ${userId} (${cropName})`)
+      }
+    } catch (dbErr) {
+      console.warn("Could not save to MongoDB:", dbErr)
+    }
+
     res.json({
       success: true,
-      message: "Dual-source crop analysis completed",
+      message: "Dual-source crop analysis and historical evaluation completed",
       data: {
-        cropName, growthStage, location, sowingDate,
+        userId,
+        cropName,
+        growthStage,
+        location,
+        sowingDate,
         symptoms: symptoms || "",
         imageReceived: true,
         // Three result objects for the frontend
         aiResult,
         datasetResult,
         finalResult,
+        historyComparison: finalResult.historyComparison,
+        pastScansTimeline: [scanRecord, ...pastScans],
         // Meta
         comparison: {
           overlapScore,
@@ -390,6 +546,43 @@ Analyze the image carefully. Return ONLY valid JSON (no markdown):
     console.error("❌ Analysis error:", error)
     res.status(500).json({ success: false, message: "AI crop analysis failed" })
   }
+})
+
+// ── GET /api/history/:userId ─────────────────────────────────────────────────
+app.get("/api/history/:userId", async (req, res) => {
+  const { userId } = req.params
+  let list: any[] = []
+  try {
+    if (mongoose.connection.readyState === 1) {
+      list = await CropScanHistory.find({ userId }).sort({ scanDate: -1 }).lean()
+    }
+  } catch (err) {
+    console.warn("Error fetching user history:", err)
+  }
+  if (!list.length) {
+    list = inMemoryHistory.filter(h => h.userId === userId)
+  }
+  res.json({ success: true, history: list })
+})
+
+// ── GET /api/history/:userId/:cropName ───────────────────────────────────────
+app.get("/api/history/:userId/:cropName", async (req, res) => {
+  const { userId, cropName } = req.params
+  let list: any[] = []
+  try {
+    if (mongoose.connection.readyState === 1) {
+      list = await CropScanHistory.find({
+        userId,
+        cropName: { $regex: new RegExp(`^${cropName}$`, "i") }
+      }).sort({ scanDate: -1 }).lean()
+    }
+  } catch (err) {
+    console.warn("Error fetching crop history:", err)
+  }
+  if (!list.length) {
+    list = inMemoryHistory.filter(h => h.userId === userId && h.cropName.toLowerCase() === cropName.toLowerCase())
+  }
+  res.json({ success: true, history: list })
 })
 
 app.listen(PORT as number, "0.0.0.0", () => {

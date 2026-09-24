@@ -1,0 +1,87 @@
+/* ── FieldMonitoring Section Styles ─────────────────────────────────────────── */
+
+.crop-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px
+}
+
+.crop-card {
+    background: #fff;
+    border: 1px solid #e3e9e4;
+    border-radius: 9px;
+    padding: 16px
+}
+
+.crop-top {
+    display: flex;
+    justify-content: space-between
+}
+
+.crop-emoji { font-size: 27px }
+
+.health {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 5px 7px;
+    border-radius: 20px;
+    height: max-content
+}
+
+.health.good  { background: #e7f5eb; color: #2d704d }
+.health.warn  { background: #fff3da; color: #9b6c19 }
+.health.danger { background: #fde9e8; color: #a64946 }
+
+.crop-card h3 { font-size: 15px; margin: 12px 0 3px }
+.crop-card p  { font-size: 11px; color: #7b867e; margin: 0 }
+
+.progress {
+    height: 5px;
+    background: #edf1ed;
+    border-radius: 10px;
+    margin: 15px 0 7px;
+    overflow: hidden
+}
+
+.progress i {
+    display: block;
+    height: 100%;
+    background: #65a246;
+    border-radius: 10px
+}
+
+.crop-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #768178
+}
+
+.crop-meta b { color: #34704e }
+
+.crop-card button {
+    border: 0;
+    background: none;
+    padding: 12px 0 0;
+    color: #2b704d;
+    font-weight: 800;
+    font-size: 9px;
+    cursor: pointer
+}
+
+body.dark .crop-card {
+    background: #19251e;
+    border-color: #2b3a30
+}
+
+body.dark .crop-card p {
+    color: #abb8ae
+}
+
+@media(max-width:1050px) {
+    .crop-grid { grid-template-columns: 1fr 1fr }
+}
+
+@media(max-width:650px) {
+    .crop-grid { grid-template-columns: 1fr }
+}
